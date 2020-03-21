@@ -31,8 +31,8 @@ There are multiple
 available.  To use the latest available image, run:
 
 ```shell
-docker pull giovtorres/docker-centos7-slurm:latest
-docker run -v /var/run/docker.sock:/var/run/docker.sock -it -h ernie giovtorres/docker-centos7-slurm:latest /test.sh
+docker pull popperized/docker-slurm-cluster:latest
+docker run -h ernie --workdir /src -v /var/run/docker.sock:/var/run/docker.sock -v $PWD:/src popperized/docker-slurm-cluster:latest /src/test.sh
 ```
 
 The above command will drop you into a bash shell inside the container. Tini
