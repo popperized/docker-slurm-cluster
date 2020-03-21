@@ -20,6 +20,10 @@ RUN set -ex \
         bzip2-devel \
         file \
         iproute \
+        python3 \
+        python3-pip \
+        python3-venv \
+        nano \
         gcc \
         gcc-c++ \
         gdbm-devel \
@@ -55,6 +59,9 @@ RUN set -ex \
     && rm -rf /var/cache/yum
 
 COPY files/install-python.sh /tmp
+
+# Install docker-ce
+RUN curl -o- https://get.docker.com | bash
 
 # Install Python versions
 ARG PYTHON_VERSIONS="2.7 3.5 3.6 3.7 3.8"
@@ -114,11 +121,19 @@ COPY files/supervisord.conf /etc/
 VOLUME ["/var/lib/mysql", "/var/lib/slurmd", "/var/spool/slurmd", "/var/log/slurm"]
 
 COPY docker-entrypoint.sh /usr/local/bin/docker-entrypoint.sh
+ADD . /
 
 # Add Tini
 ARG TINI_VERSION=v0.18.0
 ADD https://github.com/krallin/tini/releases/download/${TINI_VERSION}/tini /sbin/tini
 RUN chmod +x /sbin/tini
+
+# Install popper
+RUN git clone https://github.com/systemslab/popper \ 
+   && cd popper \
+   && git checkout jayjeet/runner_slurm \
+   && pip3 install cli/ \
+   && cd ..
 
 ENTRYPOINT ["/sbin/tini", "--", "/usr/local/bin/docker-entrypoint.sh"]
 CMD ["/bin/bash"]
