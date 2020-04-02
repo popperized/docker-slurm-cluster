@@ -51,6 +51,7 @@ RUN set -ex \
         tk \
         tk-devel \
         supervisor \
+	squashfs-tools \
         wget \
         vim-enhanced \
         xz-devel \
@@ -131,7 +132,6 @@ RUN chmod +x /sbin/tini
 # Install popper
 RUN git clone https://github.com/systemslab/popper \ 
    && cd popper \
-   && git checkout jayjeet/runner_slurm \
    && pip3 install cli/ \
    && cd ..
 
